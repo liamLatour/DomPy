@@ -1,0 +1,13 @@
+{
+    "mainColor": {
+        "normal": "#272822",
+        "light": "#3E3D32",
+        "dark": "#1E1F1C"
+    },
+    "textColor": {
+        "normal": "#FFFFFF",
+        "important": "#F92672",
+        "secondary": "#66D9EF",
+        "tertiary": "#A6E22E"
+    }
+}

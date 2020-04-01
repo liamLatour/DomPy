@@ -1,0 +1,34 @@
+{
+  "name": "dompy",
+  "version": "1.0.0",
+  "description": "UI to create and organize multiple domotic installations",
+  "main": "main.js",
+  "homepage": "./",
+  "scripts": {
+    "start": "electron .",
+    "dev": "electron . --debug",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "build": {
+    "appId": "com.dom.py.app",
+    "directories": {
+      "buildResources": "assets"
+    },
+    "win": {
+      "category": "your.app.category.type",
+      "iconUrl": "css/icone.png"
+    }
+  },
+  "dependencies": {
+    "custom-electron-titlebar": "^3.2.2-hotfix62",
+    "electron": "^7.1.4",
+    "electron-store": "^5.1.1",
+    "jquery": "^3.4.1",
+    "rimraf": "^3.0.2"
+  },
+  "author": "Liam Latour",
+  "license": "ISC",
+  "devDependencies": {
+    "electron-builder": "^22.4.1"
+  }
+}
