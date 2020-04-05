@@ -1,6 +1,11 @@
 const customTitlebar = require('custom-electron-titlebar');
-const { remote } = require('electron');
-const { Menu, MenuItem } = remote;
+const {
+    remote
+} = require('electron');
+const {
+    Menu,
+    MenuItem
+} = remote;
 
 $("body").css('background-color', colors.mainColor.normal);
 $("body").css('color', colors.textColor.normal);
@@ -21,7 +26,7 @@ var config = {
     dimensions: {
         borderWidth: 5,
         minItemHeight: 100,
-        minItemWidth: 200,
+        minItemWidth: 150,
         headerHeight: 20,
         dragProxyWidth: 300,
         dragProxyHeight: 200
@@ -38,9 +43,14 @@ var config = {
                 }
             }, {
                 type: 'component',
+                id: 'hierarchie',
+                componentName: 'Hierarchie',
+                componentState: {}
+            }, {
+                type: 'component',
                 componentName: 'testComponent',
                 componentState: {
-                    label: 'C'
+                    label: 'B'
                 }
             }]
         }, {
@@ -86,11 +96,19 @@ menu.append(new MenuItem({
             };
             myLayout.root.contentItems[0].addChild(newItemConfig);
         }
-    },
-    {
-        type: 'separator'
-    }
-    ]
+    }, {
+        label: 'Hierarchie',
+        id: 'winHierarchie',
+        click: () => {
+            var newItemConfig = {
+                type: 'component',
+                id: 'hierarchie',
+                componentName: 'Hierarchie',
+                componentState: {}
+            };
+            myLayout.root.contentItems[0].addChild(newItemConfig);
+        }
+    }]
 }));
 
 titleBar.updateMenu(menu);
@@ -104,13 +122,22 @@ myLayout.registerComponent('testComponent', function (container, componentState)
 });
 
 myLayout.registerComponent('Assets', Assets);
+myLayout.registerComponent('Hierarchie', Hierarchie);
+
 
 myLayout.on('stateChanged', function () {
-    var assets = menu.getMenuItemById('winAssets')
+    var assets = menu.getMenuItemById('winAssets');
+    var hierarchie = menu.getMenuItemById('winHierarchie');
     if (myLayout.root.getItemsById('assets').length == 0) {
         assets.enabled = true;
     } else {
         assets.enabled = false;
+    }
+
+    if (myLayout.root.getItemsById('hierarchie').length == 0) {
+        hierarchie.enabled = true;
+    } else {
+        hierarchie.enabled = false;
     }
 
     var state = JSON.stringify(myLayout.toConfig());

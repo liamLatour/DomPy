@@ -55,11 +55,11 @@ function Assets(container, componentState) {
                                             <div class="card-body text-center" style="width: 100%;height: 100%;padding: 0;">\
                                                 <img src="./icons/scriptIcon.svg" class="icons" alt="Script" style="height: 100%;width: 100%;cursor: pointer;">\
                                                 <footer>\
-                                                    <input type="text" id="newScriptInput" placeholder="New Script" autofocus style="width: 150%;margin-left: -25%;border: solid var(--green) 0.16em; border-radius: 5px;background-color: transparent;padding-left: 5px;">\
+                                                    <input type="text" id="newScriptInput" placeholder="New Script" style="width: 150%;margin-left: -25%;border: solid var(--green) 0.16em; border-radius: 5px;background-color: transparent;padding-left: 5px;">\
                                                 </footer>\
                                             </div>\
                                         </div>\
-                                    </div>').on('blur keyup', '#newScriptInput', function (event) {
+                                    </div>').find('input').on('blur keyup', function (event) {
                     if (event.type == "keyup" && event.keyCode != 13) return;
                     var val = $('#newScriptInput').val();
                     if (path.extname(val) != '.js') {
@@ -72,7 +72,7 @@ function Assets(container, componentState) {
                     }
                     $('.placeholder').remove();
                     $('body').trigger("updateTree");
-                });
+                }).focus();
                 $("#folderContent").append(placeholder).find('.icons').colorSVG(colors.textColor.tertiary);
             }
         }
@@ -100,43 +100,45 @@ function Assets(container, componentState) {
                                             <div class="d-flex flex-wrap mt-4 justify-content-start" id="folderContent">\
                                         </div>\
                                     </div>\
-                                </div>').on("click", ".folderClick", function () {
-        $('#assetsTree').jstree(true).deselect_all(true);
-        $('#assetsTree').jstree(true).select_node($(this).data("path"));
-    }).on("contextmenu", ".folderClick, .scriptClick", function (event) {
-        var canDelete = ctxMenu.getMenuItemById('delete')
-        canDelete.enabled = true;
-        ctxMenuParam.elementClicked = this;
-        ctxMenu.popup({
-            callback: function () {
-                ctxMenuParam.elementClicked = null;
-                canDelete.enabled = false;
+                                </div>')
+        .on("click", ".folderClick", function () {
+            $('#assetsTree').jstree(true).deselect_all(true);
+            $('#assetsTree').jstree(true).select_node($(this).data("path"));
+        }).on("contextmenu", ".folderClick, .scriptClick", function (event) {
+            var canDelete = ctxMenu.getMenuItemById('delete');
+            canDelete.enabled = true;
+            ctxMenuParam.elementClicked = this;
+            ctxMenu.popup({
+                callback: function () {
+                    ctxMenuParam.elementClicked = null;
+                    canDelete.enabled = false;
+                }
+            });
+            event.stopPropagation();
+        }).on("contextmenu", "#folderCol", function (e) {
+            ctxMenu.popup({
+                callback: function () {
+                }
+            });
+        }).find('#assetsTree').jstree({
+            "plugins" : ["wholerow"],
+            'core': {
+                'multiple': false,
+                "check_callback" : true,
+                'themes': {
+                    'name': 'proton',
+                    'responsive': false,
+                    "dots": false
+                },
+                'data': []
             }
+        }).on("changed.jstree", function (e, data) {
+            if (data.node == undefined) return;
+            container.extendState({
+                selectedFolder: data.node.id
+            });
+            openDir(data.node.id);
         });
-        event.stopPropagation();
-    }).on("contextmenu", "#folderCol", function (e) {
-        ctxMenu.popup({
-            callback: function () {
-                ctxMenuParam.elementClicked = null;
-            }
-        });
-    }).find('#assetsTree').jstree({
-        'core': {
-            'multiple': false,
-            'themes': {
-                'name': 'proton',
-                'responsive': false,
-                "dots": false
-            },
-            'data': []
-        }
-    }).on("changed.jstree", function (e, data) {
-        if (data.node == undefined) return;
-        container.extendState({
-            selectedFolder: data.node.id
-        });
-        openDir(data.node.id);
-    });
 
     $('body').trigger("updateTree");
 }
