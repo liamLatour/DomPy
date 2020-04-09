@@ -19,6 +19,17 @@ body {
   background: #555;
 }
 
+.collapsed {
+  transform: rotate(-90deg);
+}
+
+.smoothTransition {
+  transition: .3s transform ease-in-out;
+}
+
+.card-header{
+  padding: 5px;
+}
 /* jsTree default theme */
 .jstree-node,
 .jstree-children,

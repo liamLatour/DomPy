@@ -1,6 +1,6 @@
 function Assets(container, componentState) {
     $('body').on('updateTree', function () {
-        filewalker(componentState.selectedFolder, function (err, output) {
+        fileWalker(componentState.selectedFolder, function (err, output) {
             if (err) {
                 throw err;
             }

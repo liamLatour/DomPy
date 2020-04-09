@@ -5,7 +5,7 @@ const Store = require('electron-store');
 const store = new Store();
 const colors = JSON.parse(fs.readFileSync('colorThemes/' + store.get('colorTheme')));
 
-function filewalker(dir, done) {
+function fileWalker(dir, done) {
     let dirList = {
         "text": path.basename(dir),
         "id": dir,
@@ -24,7 +24,7 @@ function filewalker(dir, done) {
 
             fs.stat(file, function (err, stat) {
                 if (stat && stat.isDirectory()) {
-                    filewalker(file, function (err, res) {
+                    fileWalker(file, function (err, res) {
                         dirList.children.push(res);
                         if (!--pending) done(null, dirList);
                     });

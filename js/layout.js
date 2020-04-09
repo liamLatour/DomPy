@@ -43,15 +43,14 @@ var config = {
                 }
             }, {
                 type: 'component',
-                id: 'hierarchie',
-                componentName: 'Hierarchie',
+                id: 'hierarchy',
+                componentName: 'Hierarchy',
                 componentState: {}
             }, {
                 type: 'component',
-                componentName: 'testComponent',
-                componentState: {
-                    label: 'B'
-                }
+                id: 'componentView',
+                componentName: 'ComponentView',
+                componentState: {}
             }]
         }, {
             type: 'component',
@@ -97,13 +96,25 @@ menu.append(new MenuItem({
             myLayout.root.contentItems[0].addChild(newItemConfig);
         }
     }, {
-        label: 'Hierarchie',
-        id: 'winHierarchie',
+        label: 'Hierarchy',
+        id: 'winHierarchy',
         click: () => {
             var newItemConfig = {
                 type: 'component',
-                id: 'hierarchie',
-                componentName: 'Hierarchie',
+                id: 'hierarchy',
+                componentName: 'Hierarchy',
+                componentState: {}
+            };
+            myLayout.root.contentItems[0].addChild(newItemConfig);
+        }
+    }, {
+        label: 'ComponentView',
+        id: 'winComponentView',
+        click: () => {
+            var newItemConfig = {
+                type: 'component',
+                id: 'componentView',
+                componentName: 'ComponentView',
                 componentState: {}
             };
             myLayout.root.contentItems[0].addChild(newItemConfig);
@@ -122,22 +133,30 @@ myLayout.registerComponent('testComponent', function (container, componentState)
 });
 
 myLayout.registerComponent('Assets', Assets);
-myLayout.registerComponent('Hierarchie', Hierarchie);
+myLayout.registerComponent('Hierarchy', Hierarchy);
+myLayout.registerComponent('ComponentView', ComponentView);
 
 
 myLayout.on('stateChanged', function () {
     var assets = menu.getMenuItemById('winAssets');
-    var hierarchie = menu.getMenuItemById('winHierarchie');
+    var hierarchy = menu.getMenuItemById('winHierarchy');
+    var componentView = menu.getMenuItemById('winComponentView');
     if (myLayout.root.getItemsById('assets').length == 0) {
         assets.enabled = true;
     } else {
         assets.enabled = false;
     }
 
-    if (myLayout.root.getItemsById('hierarchie').length == 0) {
-        hierarchie.enabled = true;
+    if (myLayout.root.getItemsById('hierarchy').length == 0) {
+        hierarchy.enabled = true;
     } else {
-        hierarchie.enabled = false;
+        hierarchy.enabled = false;
+    }
+
+    if (myLayout.root.getItemsById('componentView').length == 0) {
+        componentView.enabled = true;
+    } else {
+        componentView.enabled = false;
     }
 
     var state = JSON.stringify(myLayout.toConfig());
