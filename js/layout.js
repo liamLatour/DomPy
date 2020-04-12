@@ -7,6 +7,7 @@ const {
     MenuItem
 } = remote;
 
+
 $("body").css('background-color', colors.mainColor.normal);
 $("body").css('color', colors.textColor.normal);
 
@@ -131,6 +132,7 @@ myLayout._isFullPage = true;
 myLayout.registerComponent('testComponent', function (container, componentState) {
     container.getElement().html('');
 });
+
 
 myLayout.registerComponent('Assets', Assets);
 myLayout.registerComponent('Hierarchy', Hierarchy);

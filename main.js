@@ -3,7 +3,6 @@ const {
     BrowserWindow
 } = require('electron');
 
-
 // using https://github.com/sindresorhus/electron-context-menu for context menus
 // using https://www.npmjs.com/package/custom-electron-titlebar for custom titlebar
 

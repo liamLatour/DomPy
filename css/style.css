@@ -27,9 +27,24 @@ body {
   transition: .3s transform ease-in-out;
 }
 
-.card-header{
+.imgScript {
+  height: 15px;
+  width: 15px;
+  margin: 5px;
+}
+
+.chooseScript{
+  cursor: pointer;
+}
+
+.chooseScript:hover {
+  background-color: #3392e3;
+}
+
+.card-header {
   padding: 5px;
 }
+
 /* jsTree default theme */
 .jstree-node,
 .jstree-children,
