@@ -6,9 +6,23 @@
     <title>DomPy</title>
     <link type="text/css" rel="stylesheet" href="https://golden-layout.com/files/latest/css/goldenlayout-base.css" />
     <link type="text/css" rel="stylesheet" href="css/goldenLayout.css" />
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+    <link type="text/css" rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
     <link type="text/css" rel="stylesheet" href="css/bootstrap.min.css" />
-    <link rel="stylesheet" href="css/style.css" />
+    <link type="text/css" rel="stylesheet" href="css/style.css" />
+    <link type="text/css" rel="stylesheet" href="css/joint.min.css" />
+
+    <style type="text/css">
+        #myholder .html-element {
+            position: absolute;
+            margin-left: 8px;
+            padding: 5px 0 10px 0;
+            background-color: #fff;
+            border: 1px solid #eee;
+            border-radius: 5px;
+            pointer-events: none;
+            -webkit-user-select: none;
+        }
+    </style>
 </head>
 
 <body>
@@ -20,12 +34,20 @@
     </script>
 
     <script type="text/javascript" src="js/jquery.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
-    <script type="text/javascript" src="js/popper.min.js"></script>
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.10.3/jquery-ui.min.js"></script>
+    <script type="text/javascript" src="js/popper.min.js"></script> <!--For bootstrap-->
     <script type="text/javascript" src="js/bootstrap.min.js"></script>
     <script type="text/javascript" src="js/svgColor.js"></script>
-    <script type="text/javascript" src="js/golden.js"></script>
-    <script type="text/javascript" src="jstree/jstree.min.js"></script>
+    <script type="text/javascript" src="js/golden.js"></script> <!--Layout librarie-->
+    <script type="text/javascript" src="jstree/jstree.min.js"></script> <!--Trees librarie-->
+
+
+    <script type="text/javascript" src="js/draw2d.js"></script>
+    <script type="text/javascript" src="js/drawingLibrarie/CollapsibleLocator.js"></script>
+    <script type="text/javascript" src="js/drawingLibrarie/CollapsibleInputLocator.js"></script>
+    <script type="text/javascript" src="js/drawingLibrarie/CollapsibleOutputLocator.js"></script>
+    <script type="text/javascript" src="js/drawingLibrarie/CollapsibleShape.js"></script>
+
 
     <script>
         const fs = require('fs');
@@ -33,12 +55,15 @@
         const rimraf = require('rimraf');
         const Store = require('electron-store');
         const store = new Store();
+        const { remote } = require('electron');
+        const { Menu, MenuItem } = remote;
         const colors = JSON.parse(fs.readFileSync('colorThemes/' + store.get('colorTheme')));
     </script>
 
     <script type="text/javascript" src="js/Hierarchy.js"></script>
     <script type="text/javascript" src="js/Assets.js"></script>
     <script type="text/javascript" src="js/ComponentView.js"></script>
+    <script type="text/javascript" src="js/VisualScripting.js"></script>
     <script type="text/javascript" src="js/layout.js"></script>
 
     <script>

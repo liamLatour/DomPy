@@ -1,12 +1,4 @@
 const customTitlebar = require('custom-electron-titlebar');
-const {
-    remote
-} = require('electron');
-const {
-    Menu,
-    MenuItem
-} = remote;
-
 
 $("body").css('background-color', colors.mainColor.normal);
 $("body").css('color', colors.textColor.normal);
@@ -38,7 +30,7 @@ var config = {
             type: 'row',
             content: [{
                 type: 'component',
-                componentName: 'testComponent',
+                componentName: 'VisualScripting',
                 componentState: {
                     label: 'B'
                 }
@@ -120,6 +112,18 @@ menu.append(new MenuItem({
             };
             myLayout.root.contentItems[0].addChild(newItemConfig);
         }
+    }, {
+        label: 'VisualScripting',
+        id: 'winVisualScripting',
+        click: () => {
+            var newItemConfig = {
+                type: 'component',
+                id: 'visualScripting',
+                componentName: 'VisualScripting',
+                componentState: {}
+            };
+            myLayout.root.contentItems[0].addChild(newItemConfig);
+        }
     }]
 }));
 
@@ -137,12 +141,14 @@ myLayout.registerComponent('testComponent', function (container, componentState)
 myLayout.registerComponent('Assets', Assets);
 myLayout.registerComponent('Hierarchy', Hierarchy);
 myLayout.registerComponent('ComponentView', ComponentView);
+myLayout.registerComponent('VisualScripting', VisualScripting);
 
 
 myLayout.on('stateChanged', function () {
     var assets = menu.getMenuItemById('winAssets');
     var hierarchy = menu.getMenuItemById('winHierarchy');
     var componentView = menu.getMenuItemById('winComponentView');
+    var visualScripting = menu.getMenuItemById('winVisualScripting');
     if (myLayout.root.getItemsById('assets').length == 0) {
         assets.enabled = true;
     } else {
@@ -159,6 +165,12 @@ myLayout.on('stateChanged', function () {
         componentView.enabled = true;
     } else {
         componentView.enabled = false;
+    }
+
+    if (myLayout.root.getItemsById('visualScripting').length == 0) {
+        visualScripting.enabled = true;
+    } else {
+        visualScripting.enabled = false;
     }
 
     var state = JSON.stringify(myLayout.toConfig());

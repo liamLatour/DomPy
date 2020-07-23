@@ -1,0 +1,45 @@
+{
+    "title": "DIO socket",
+    "JSfile": "DIO.js",
+    "config": [{
+            "name": "Data",
+            "type": "GPIO"
+        },
+        {
+            "name": "Receiver pin 1",
+            "type": "GPIO"
+        },
+        {
+            "name": "Receiver pin 2",
+            "type": "GPIO"
+        }
+    ],
+    "members": [{
+            "title": "Sniffer",
+            "function": "getCodes",
+            "body": [{
+                "side": "input",
+                "text": "Launch",
+                "color": "#e8ad47",
+                "type": "trigger"
+            }]
+        },
+        {
+            "title": "Trigger",
+            "function": "trigger",
+            "body": [{
+                    "side": "input",
+                    "text": "Socket number",
+                    "color": "#e8ad47",
+                    "type": "int"
+                },
+                {
+                    "side": "input",
+                    "text": "ON/OFF",
+                    "color": "#e8ad47",
+                    "type": "bool"
+                }
+            ]
+        }
+    ]
+}

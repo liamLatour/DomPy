@@ -10,36 +10,58 @@ class ComponentView {
 
     addScript(script, newScript = true, opened = true, enabled = true) {
         var supThis = this;
+
+        if (newScript && script in supThis.selectedNode.data) return;
+
         var checked = (enabled ? 'checked' : '');
         var shown = (opened ? 'show' : '');
         var icon = (opened ? '' : 'collapsed');
-        var scriptLayout = $('<div class="card">\
-                                <div class="card-header" id="heading' + script + '" style="display: flex;align-items: center;">\
-                                    <button class="btn smoothTransition ' + icon + '" style="padding: 0;border: 0;outline: none;box-shadow: none;" type="button" data-toggle="collapse" data-target="#collapse' + script + '" aria-expanded="false" aria-controls="collapseTwo">\
+        var id = path.basename(script, path.extname(script));
+
+        fs.readFile(script, 'utf8', function (err, data) {
+            if (err) throw err;
+            var scriptData = JSON.parse(data);
+
+            var inputs = "";
+
+            for (i in scriptData.config) {
+                inputs += '<tr>\
+                                <td>'+scriptData.config[i].name+'</td>\
+                                <td><input type="text" class="configInput" id="name" name="name" size="10"></td>\
+                            </tr>';
+            }
+
+            var scriptLayout = $('<div class="card">\
+                                <div class="card-header" id="heading' + id + '" style="display: flex;align-items: center;">\
+                                    <button class="btn smoothTransition ' + icon + '" style="padding: 0;border: 0;outline: none;box-shadow: none;" type="button" data-toggle="collapse" data-target="#collapse' + id + '" aria-expanded="false" aria-controls="collapseTwo">\
                                         <img src="./icons/opened.svg" class="icons" alt=">" style="height: 15px;width: 15px;cursor: pointer;">\
                                     </button><img src="./icons/rpi.svg" alt="R" style="height: 15px;width: 15px;margin-right: 5px;">\
-                                    <input id="enabling' + script + '" type="checkbox" ' + checked + ' style="margin: 0;margin-right: 5px;">This is a script\
+                                    <input id="enabling' + id + '" type="checkbox" ' + checked + ' style="margin: 0;margin-right: 5px;">' + scriptData.title + '\
                                 </div>\
-                                <div id="collapse' + script + '" class="collapse ' + shown + '" aria-labelledby="heading' + script + '">\
+                                <div id="collapse' + id + '" class="collapse ' + shown + '" aria-labelledby="heading' + id + '">\
                                     <div class="card-body">\
-                                        hey do\
+                                        <table style="width: 100%;">\
+                                            <tbody>'+inputs+'</tbody>\
+                                        </table>\
                                     </div>\
                                 </div>\
                             </div>')
-            .on('change', '#enabling' + script, function () {
-                supThis.selectedNode.data[script].enabled = $('#enabling' + script).is(":checked");
-            }).on('hide.bs.collapse', function () {
-                supThis.selectedNode.data[script].opened = false;
-            }).on('show.bs.collapse', function () {
-                supThis.selectedNode.data[script].opened = true;
-            });
-        $('#scriptAccordion').append(scriptLayout).find('.icons').colorSVG(colors.textColor.normal);
-        if (newScript) {
-            supThis.selectedNode.data[script] = {
-                'opened': true,
-                'enabled': true
-            };
-        }
+                .on('change', '#enabling' + id, function () {
+                    supThis.selectedNode.data[script].enabled = $('#enabling' + id).is(":checked");
+                }).on('hide.bs.collapse', function () {
+                    supThis.selectedNode.data[script].opened = false;
+                }).on('show.bs.collapse', function () {
+                    supThis.selectedNode.data[script].opened = true;
+                });
+            $('#scriptAccordion').append(scriptLayout).find('.icons').colorSVG(colors.textColor.normal);
+            if (newScript) {
+                supThis.selectedNode.data[script] = {
+                    'opened': true,
+                    'enabled': true
+                };
+                $('body').trigger("visualScripting:load", [supThis.selectedNode]);
+            }
+        });
     }
 
     instantiateLayout() {
@@ -65,9 +87,9 @@ class ComponentView {
             .droppable({
                 accept: ".scriptFromAssets",
                 drop: function (event, ui) {
-                    if($('#componentView').is(":visible")){
+                    if ($('#componentView').is(":visible")) {
                         var scriptPath = $(ui.draggable).find('img').data('path');
-                        supThis.addScript(path.basename(scriptPath, path.extname(scriptPath)));
+                        supThis.addScript(scriptPath);
                     }
                 }
             })
@@ -117,6 +139,7 @@ class ComponentView {
                     if (node.data == null) {
                         node.data = {};
                     } else {
+                        console.log("Node data ", node);
                         for (var element in node.data) {
                             supThis.addScript(element, false, node.data[element].opened, node.data[element].enabled);
                         }

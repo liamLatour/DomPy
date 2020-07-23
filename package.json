@@ -21,6 +21,7 @@
   },
   "dependencies": {
     "custom-electron-titlebar": "^3.2.2-hotfix62",
+    "draw2d": "^1.0.37",
     "electron": "^7.1.4",
     "electron-store": "^5.1.1",
     "jquery": "^3.4.1",

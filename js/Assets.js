@@ -14,7 +14,7 @@ class Assets {
         $('body').trigger("updateTree");
     }
 
-    fileWalker(dir, done) {
+    dirWalker(dir, done) {
         var supThis = this;
         let dirList = {
             "text": path.basename(dir),
@@ -34,7 +34,7 @@ class Assets {
 
                 fs.stat(file, function (err, stat) {
                     if (stat && stat.isDirectory()) {
-                        supThis.fileWalker(file, function (err, res) {
+                        supThis.dirWalker(file, function (err, res) {
                             dirList.children.push(res);
                             if (!--pending) done(null, dirList);
                         });
@@ -54,6 +54,7 @@ class Assets {
             list.forEach(function (file) {
                 file = path.resolve(dir, file);
 
+
                 fs.stat(file, function (err, stat) {
                     if (stat && stat.isDirectory()) {
                         $("#folderContent").append('<div class="col-auto mb-3">\
@@ -64,7 +65,7 @@ class Assets {
                                                             </div>\
                                                         </div >\
                                                     </div >');
-                    } else {
+                    } else if (path.basename(file).endsWith('.json')) {
                         var addedScript = $('<div class="col-auto mb-3 scriptFromAssets">\
                                                 <div class="card" style="width: 5rem;height: 5rem;background-color: transparent;border: none;">\
                                                     <div class="card-body text-center" style="width: 100%;height: 100%;padding: 0;">\
@@ -148,7 +149,7 @@ class Assets {
     events() {
         var supThis = this;
         $('body').on('updateTree', function () {
-            supThis.fileWalker(supThis.componentState.selectedFolder, function (err, output) {
+            supThis.dirWalker(supThis.componentState.selectedFolder, function (err, output) {
                 if (err) {
                     throw err;
                 }

@@ -40,6 +40,7 @@ class Hierarchy {
                     val = data.node;
                 }
                 $('body').trigger("componentView:load", [val]);
+                $('body').trigger("visualScripting:load", [val]);
             }).on('contextmenu', '.jstree-anchor, .jstree-wholerow', function (e) {
                 supThis.canRemove.enabled = true;
                 supThis.canRename.enabled = true;
