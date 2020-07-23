@@ -24,7 +24,7 @@
     "draw2d": "^1.0.37",
     "electron": "^7.1.4",
     "electron-store": "^5.1.1",
-    "jquery": "^3.4.1",
+    "jquery": "^3.5.0",
     "rimraf": "^3.0.2"
   },
   "author": "Liam Latour",
