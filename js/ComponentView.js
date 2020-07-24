@@ -24,10 +24,14 @@ class ComponentView {
 
             var inputs = "";
 
-            for (i in scriptData.config) {
+            for (const i of scriptData.config) {
+                var value = "";
+                if(!newScript && supThis.selectedNode.data[script].config != null){
+                    value = supThis.selectedNode.data[script].config[i.name];
+                }
                 inputs += '<tr>\
-                                <td>'+scriptData.config[i].name+'</td>\
-                                <td><input type="text" class="configInput" id="name" name="name" size="10"></td>\
+                                <td>' + i.name + '</td>\
+                                <td><input type="text" class="configInput" id="'+i.name+'" value="'+value+'"></td>\
                             </tr>';
             }
 
@@ -41,13 +45,21 @@ class ComponentView {
                                 <div id="collapse' + id + '" class="collapse ' + shown + '" aria-labelledby="heading' + id + '">\
                                     <div class="card-body">\
                                         <table style="width: 100%;">\
-                                            <tbody>'+inputs+'</tbody>\
+                                            <tbody>' + inputs + '</tbody>\
                                         </table>\
                                     </div>\
                                 </div>\
                             </div>')
                 .on('change', '#enabling' + id, function () {
                     supThis.selectedNode.data[script].enabled = $('#enabling' + id).is(":checked");
+                }).on('input', '.configInput', function () {
+                    var config = {};
+
+                    $(".configInput").each(function (index) {
+                        config[$(this).attr('id')] = $(this).val();
+                    });
+
+                    supThis.selectedNode.data[script].config = config;
                 }).on('hide.bs.collapse', function () {
                     supThis.selectedNode.data[script].opened = false;
                 }).on('show.bs.collapse', function () {
@@ -57,7 +69,8 @@ class ComponentView {
             if (newScript) {
                 supThis.selectedNode.data[script] = {
                     'opened': true,
-                    'enabled': true
+                    'enabled': true,
+                    'config': null
                 };
                 $('body').trigger("visualScripting:load", [supThis.selectedNode]);
             }
@@ -139,7 +152,7 @@ class ComponentView {
                     if (node.data == null) {
                         node.data = {};
                     } else {
-                        console.log("Node data ", node);
+                        //console.log("Node data ", node);
                         for (var element in node.data) {
                             supThis.addScript(element, false, node.data[element].opened, node.data[element].enabled);
                         }

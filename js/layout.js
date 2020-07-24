@@ -30,6 +30,7 @@ var config = {
             type: 'row',
             content: [{
                 type: 'component',
+                id: 'visualScripting',
                 componentName: 'VisualScripting',
                 componentState: {
                     label: 'B'
@@ -58,7 +59,7 @@ var config = {
 
 var savedState = store.get('layoutState');
 
-if (savedState !== null && false) {
+if (savedState !== null) {
     myLayout = new GoldenLayout(JSON.parse(savedState), '.container-after-titlebar');
 } else {
     myLayout = new GoldenLayout(config, '.container-after-titlebar');

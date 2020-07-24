@@ -12,7 +12,8 @@ var CollapsibleShape = draw2d.shape.layout.VerticalLayout.extend({
             color: "#E7E7E7",
             stroke: 2,
             radius: 5,
-            gap: 5
+            gap: 5,
+            userData: attr[1]
         }, attr[0]));
 
         this.header = new draw2d.shape.layout.HorizontalLayout({

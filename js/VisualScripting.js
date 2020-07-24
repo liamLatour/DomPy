@@ -64,6 +64,15 @@ class VisualScripting {
 
     clear() {
         var supThis = this;
+
+        if (supThis.selectedNode != null) {
+            // save state
+            var writer = new draw2d.io.json.Writer();
+            writer.marshal(supThis.draw2DCanvas, function (json) {
+                supThis.selectedNode.graph = json;
+            });
+        }
+
         supThis.ctxMenu = Menu.buildFromTemplate([{
             label: 'New Node',
             submenu: [{
@@ -95,16 +104,20 @@ class VisualScripting {
         }, {
             type: 'separator'
         }]);
+
+        if (supThis.draw2DCanvas != null) {
+            supThis.draw2DCanvas.clear();
+        }
     }
 
     events() {
         var supThis = this;
         $('body')
             .on('visualScripting:load', function (event, node) {
-                supThis.selectedNode = node;
-
                 // Empty scene
                 supThis.clear();
+
+                supThis.selectedNode = node;
 
                 if (node != null) {
                     // Do your thing
@@ -113,14 +126,14 @@ class VisualScripting {
                             fs.readFile(element, 'utf8', function (err, data) {
                                 if (err) throw err;
                                 var scriptData = JSON.parse(data);
-                                for (const tiles of scriptData.members) {
+                                for (const tile of scriptData.members) {
                                     supThis.ctxMenu.append(new MenuItem({
-                                        label: tiles.title,
+                                        label: tile.title,
                                         click: (menuItem, browserWindow, event) => {
                                             var figure = new CollapsibleShape([{
                                                 x: 50,
                                                 y: 25
-                                            }, tiles]);
+                                            }, tile]);
                                             supThis.draw2DCanvas.add(figure);
                                         }
                                     }));
@@ -129,10 +142,22 @@ class VisualScripting {
                         }
                     }
 
-                    if (node.content == null) {
-                        node.content = {};
+                    if (node.graph == null || node.graph.length == 0) {
+                        node.graph = {};
                     } else {
-                        console.log("Node content ", node.content);
+                        for (const tile of node.graph) {
+                            if (tile.type == "CollapsibleShape") {
+                                var figure = new CollapsibleShape([{
+                                    x: tile.x,
+                                    y: tile.y,
+                                    id: tile.id
+                                }, tile.userData]);
+                                supThis.draw2DCanvas.add(figure);
+                            } else {
+                                var reader = new draw2d.io.json.Reader();
+                                reader.unmarshal(supThis.draw2DCanvas, [tile]);
+                            }
+                        }
                     }
                 }
             })
