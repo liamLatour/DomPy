@@ -48,16 +48,18 @@ class Assets {
 
     openDir(dir) {
         fs.readdir(dir, function (err, list) {
-            if (err) return done(err);
+            if (err) {
+                console.error(err);
+                return;
+            }
             $("#folderContent").html('');
 
             list.forEach(function (file) {
                 file = path.resolve(dir, file);
+                var stat = fs.statSync(file);
 
-
-                fs.stat(file, function (err, stat) {
-                    if (stat && stat.isDirectory()) {
-                        $("#folderContent").append('<div class="col-auto mb-3">\
+                if (stat && stat.isDirectory()) {
+                    $("#folderContent").append('<div class="col-auto mb-3">\
                                                         <div class="card" style="width: 5rem;height: 5rem;background-color: transparent;border: none;">\
                                                             <div class="card-body text-center" style="width: 100%;height: 100%;padding: 0;">\
                                                                 <img src="./icons/folderIconB.svg" alt="Folder" data-path="' + file + '" class="folderClick icons" style="height: 100%;width: 100%;cursor: pointer;">\
@@ -65,8 +67,8 @@ class Assets {
                                                             </div>\
                                                         </div >\
                                                     </div >');
-                    } else if (path.basename(file).endsWith('.json')) {
-                        var addedScript = $('<div class="col-auto mb-3 scriptFromAssets">\
+                } else if (path.basename(file).endsWith('.json')) {
+                    var addedScript = $('<div class="col-auto mb-3 scriptFromAssets">\
                                                 <div class="card" style="width: 5rem;height: 5rem;background-color: transparent;border: none;">\
                                                     <div class="card-body text-center" style="width: 100%;height: 100%;padding: 0;">\
                                                         <img src="./icons/scriptIcon.svg" alt="Script" data-path="' + file + '" class="scriptClick icons" style="height: 100%;width: 100%;cursor: pointer;">\
@@ -74,8 +76,8 @@ class Assets {
                                                     </div>\
                                                 </div>\
                                             </div>').draggable({
-                            helper: function (event) {
-                                var helper = $('<div class="col-auto mb-3" style="position: fixed;z-index:5;">\
+                        helper: function (event) {
+                            var helper = $('<div class="col-auto mb-3" style="position: fixed;z-index:5;">\
                                             <div class="card" style="width: 5rem;height: 5rem;background-color: transparent;border: none;">\
                                                 <div class="card-body text-center" style="width: 100%;height: 100%;padding: 0;">\
                                                     <img src="./icons/scriptIcon.svg" alt="Script" class="icons" style="height: 100%;width: 100%;">\
@@ -83,14 +85,13 @@ class Assets {
                                                 </div>\
                                             </div >\
                                         </div>');
-                                $(helper).find('.icons').colorSVG(colors.textColor.tertiary);
-                                return helper;
-                            }
-                        });
-                        $("#folderContent").append(addedScript);
-                    }
-                    $('.icons').colorSVG(colors.textColor.tertiary);
-                });
+                            $(helper).find('.icons').colorSVG(colors.textColor.tertiary);
+                            return helper;
+                        }
+                    });
+                    $("#folderContent").append(addedScript);
+                }
+                $('.icons').colorSVG(colors.textColor.tertiary);
             });
         });
     }
@@ -123,7 +124,7 @@ class Assets {
                 event.stopPropagation();
             }).on("contextmenu", "#folderCol", function (e) {
                 supThis.ctxMenu.popup({
-                    callback: function () { }
+                    callback: function () {}
                 });
             }).find('#assetsTree').jstree({
                 "plugins": ["wholerow"],
@@ -170,9 +171,9 @@ class Assets {
         supThis.ctxMenu = Menu.buildFromTemplate([{
             label: 'Create',
             submenu: [{
-                label: 'Folder',
-                click: (menuItem, browserWindow, event) => {
-                    var placeholder = $('<div class="col-auto mb-3 placeholder">\
+                    label: 'Folder',
+                    click: (menuItem, browserWindow, event) => {
+                        var placeholder = $('<div class="col-auto mb-3 placeholder">\
                                                 <div class="card" style="width: 5rem;height: 5rem;background-color: transparent;border: none;">\
                                                     <div class="card-body text-center" style="width: 100%;height: 100%;padding: 0;">\
                                                         <img src="./icons/folderIconB.svg" class="icons" alt="Folder" style="height: 100%;width: 100%;cursor: pointer;">\
@@ -182,23 +183,23 @@ class Assets {
                                                     </div>\
                                                 </div>\
                                             </div>').on('blur keyup', '#newFolderInput', function (event) {
-                        if (event.type == "keyup" && event.keyCode != 13) return;
-                        try {
-                            fs.mkdirSync(myLayout.root.getItemsById('assets')[0].config.componentState.selectedFolder + '\\' + $('#newFolderInput').val());
-                        } catch (err) {
-                            console.error(err);
-                        }
+                            if (event.type == "keyup" && event.keyCode != 13) return;
+                            try {
+                                fs.mkdirSync(myLayout.root.getItemsById('assets')[0].config.componentState.selectedFolder + '\\' + $('#newFolderInput').val());
+                            } catch (err) {
+                                console.error(err);
+                            }
 
-                        $('.placeholder').remove();
-                        $('body').trigger("updateTree");
-                    });
-                    $("#folderContent").append(placeholder).find('.icons').colorSVG(colors.textColor.tertiary);
-                }
-            },
-            {
-                label: 'Js script',
-                click: (menuItem, browserWindow, event) => {
-                    var placeholder = $('<div class="col-auto mb-3 placeholder">\
+                            $('.placeholder').remove();
+                            $('body').trigger("updateTree");
+                        });
+                        $("#folderContent").append(placeholder).find('.icons').colorSVG(colors.textColor.tertiary);
+                    }
+                },
+                {
+                    label: 'Js script',
+                    click: (menuItem, browserWindow, event) => {
+                        var placeholder = $('<div class="col-auto mb-3 placeholder">\
                                                 <div class="card" style="width: 5rem;height: 5rem;background-color: transparent;border: none;">\
                                                     <div class="card-body text-center" style="width: 100%;height: 100%;padding: 0;">\
                                                         <img src="./icons/scriptIcon.svg" class="icons" alt="Script" style="height: 100%;width: 100%;cursor: pointer;">\
@@ -208,22 +209,22 @@ class Assets {
                                                     </div>\
                                                 </div>\
                                             </div>').find('input').on('blur keyup', function (event) {
-                        if (event.type == "keyup" && event.keyCode != 13) return;
-                        var val = $('#newScriptInput').val();
-                        if (path.extname(val) != '.js') {
-                            val += '.js';
-                        }
-                        try {
-                            fs.writeFileSync(myLayout.root.getItemsById('assets')[0].config.componentState.selectedFolder + '\\' + val, "");
-                        } catch (err) {
-                            console.error(err);
-                        }
-                        $('.placeholder').remove();
-                        $('body').trigger("updateTree");
-                    }).focus();
-                    $("#folderContent").append(placeholder).find('.icons').colorSVG(colors.textColor.tertiary);
+                            if (event.type == "keyup" && event.keyCode != 13) return;
+                            var val = $('#newScriptInput').val();
+                            if (path.extname(val) != '.js') {
+                                val += '.js';
+                            }
+                            try {
+                                fs.writeFileSync(myLayout.root.getItemsById('assets')[0].config.componentState.selectedFolder + '\\' + val, "");
+                            } catch (err) {
+                                console.error(err);
+                            }
+                            $('.placeholder').remove();
+                            $('body').trigger("updateTree");
+                        }).focus();
+                        $("#folderContent").append(placeholder).find('.icons').colorSVG(colors.textColor.tertiary);
+                    }
                 }
-            }
             ]
         }, {
             type: 'separator'

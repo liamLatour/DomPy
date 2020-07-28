@@ -69,7 +69,7 @@ class VisualScripting {
             // save state
             var writer = new draw2d.io.json.Writer();
             writer.marshal(supThis.draw2DCanvas, function (json) {
-                supThis.selectedNode.graph = json;
+                supThis.selectedNode.data.graph = json;
             });
         }
 
@@ -121,8 +121,8 @@ class VisualScripting {
 
                 if (node != null) {
                     // Do your thing
-                    if (node.data != null) {
-                        for (var element in node.data) {
+                    if (node.data.scripts != null) {
+                        for (var element in node.data.scripts) {
                             fs.readFile(element, 'utf8', function (err, data) {
                                 if (err) throw err;
                                 var scriptData = JSON.parse(data);
@@ -142,10 +142,10 @@ class VisualScripting {
                         }
                     }
 
-                    if (node.graph == null || node.graph.length == 0) {
-                        node.graph = {};
+                    if (node.data.graph == null || node.data.graph.length == 0) {
+                        node.data.graph = {};
                     } else {
-                        for (const tile of node.graph) {
+                        for (const tile of node.data.graph) {
                             if (tile.type == "CollapsibleShape") {
                                 var figure = new CollapsibleShape([{
                                     x: tile.x,

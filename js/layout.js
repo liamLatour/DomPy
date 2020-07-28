@@ -128,6 +128,29 @@ menu.append(new MenuItem({
     }]
 }));
 
+menu.append(new MenuItem({
+    label: 'File',
+    submenu: [{
+        label: 'Save',
+        id: 'save',
+        click: () => {
+            $('body').trigger("global:save");
+        }
+    },{
+        label: 'Open',
+        id: 'open',
+        click: () => {
+            $('body').trigger("global:open");
+        }
+    },{
+        label: 'New',
+        id: 'new',
+        click: () => {
+
+        }
+    }, ]
+}));
+
 titleBar.updateMenu(menu);
 titleBar.updateTitle('Welcome to DomPy !');
 

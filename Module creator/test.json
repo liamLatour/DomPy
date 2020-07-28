@@ -1,0 +1,44 @@
+{
+    "title": "Test",
+    "JSfile": "test.js",
+    "config": [{
+        "name": "Data",
+        "type": "GPIO",
+        "variable": ""
+    }, {
+        "name": "Receiver pin 1",
+        "type": "GPIO",
+        "variable": ""
+    }, {
+        "name": "Receiver pin 2",
+        "type": "GPIO",
+        "variable": ""
+    }],
+    "members": [{
+        "title": "Sniffer",
+        "function": "getCodes",
+        "body": [{
+            "side": "input",
+            "text": "Launch",
+            "color": "#e8ad47",
+            "type": "trigger",
+            "variable": ""
+        }]
+    }, {
+        "title": "Trigger",
+        "function": "switchSocket",
+        "body": [{
+            "side": "input",
+            "text": "Socket number",
+            "color": "#e8ad47",
+            "type": "int",
+            "variable": ""
+        }, {
+            "side": "input",
+            "text": "ON/OFF",
+            "color": "#e8ad47",
+            "type": "bool",
+            "variable": ""
+        }]
+    }]
+}

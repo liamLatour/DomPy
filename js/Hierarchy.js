@@ -46,7 +46,7 @@ class Hierarchy {
                 supThis.canRename.enabled = true;
                 supThis.ctxMenuParam.elementClicked = $('#hierarchyTree').jstree(true).get_node(e.target);
                 supThis.ctxMenu.popup({
-                    callback: function () { }
+                    callback: function () {}
                 });
                 e.stopPropagation();
             });
@@ -58,13 +58,97 @@ class Hierarchy {
             .on('hierarchy:add', function (event, parent) {
                 $('#hierarchyTree').jstree().create_node(parent, {
                     "text": "New Component"
-                }, "last", function () { });
+                }, "last", function () {});
             })
             .on('hierarchy:remove', function (event, node) {
                 $('#hierarchyTree').jstree().delete_node(node);
             })
             .on('hierarchy:rename', function (event, node, text) {
                 $('#hierarchyTree').jstree().rename_node(node, text);
+            })
+            .on('global:open', function (event) {
+                var dialog = remote.dialog;
+
+                var options = {
+                    //Placeholder 1
+                    title: "Save file",
+
+                    //Placeholder 2
+                    defaultPath: "C:\\",
+
+                    //Placeholder 4
+                    buttonLabel: "Open DomJS File",
+
+                    //Placeholder 3
+                    filters: [{
+                        name: 'Custom File Type',
+                        extensions: ['dom']
+                    }, {
+                        name: 'All Files',
+                        extensions: ['*']
+                    }]
+                }
+
+                var filename = dialog.showOpenDialog(null, options).then(result => {
+                    filename = result.filePaths[0];
+                    if (filename === undefined) {
+                        console.error('the user clicked the btn but didn\'t created a file');
+                        return;
+                    }
+                    fs.readFile(filename, 'utf8', (err, data) => {
+                        if (err) {
+                            console.error(err);
+                            return;
+                        }
+                        console.log(JSON.parse(data));
+                        $('#hierarchyTree').jstree(true).settings.core.data = JSON.parse(data);
+                        $('#hierarchyTree').jstree(true).refresh();
+                    })
+                }).catch(err => {
+                    console.error(err);
+                });
+            })
+            .on('global:save', function (event) {
+                var dialog = remote.dialog;
+
+                var options = {
+                    //Placeholder 1
+                    title: "Save file",
+
+                    //Placeholder 2
+                    defaultPath: "C:\\MyConfiguration.dom",
+
+                    //Placeholder 4
+                    buttonLabel: "Save DomJS File",
+
+                    //Placeholder 3
+                    filters: [{
+                        name: 'Custom File Type',
+                        extensions: ['dom']
+                    }, {
+                        name: 'All Files',
+                        extensions: ['*']
+                    }]
+                }
+
+                var fileData = JSON.stringify($('#hierarchyTree').jstree(true).get_json('#'));
+
+                var filename = dialog.showSaveDialog(null, options).then(result => {
+                    filename = result.filePath;
+                    if (filename === undefined) {
+                        console.error('the user clicked the btn but didn\'t created a file');
+                        return;
+                    }
+                    fs.writeFile(filename, fileData, (err) => {
+                        if (err) {
+                            console.error(err);
+                            return
+                        }
+                        console.log('File saved');
+                    });
+                }).catch(err => {
+                    console.error(err);
+                });
             });
 
         supThis.container.getElement().on("contextmenu", function (e) {
@@ -72,7 +156,7 @@ class Hierarchy {
             supThis.canRemove.enabled = false;
             supThis.canRename.enabled = false;
             supThis.ctxMenu.popup({
-                callback: function () { }
+                callback: function () {}
             });
         });
     }
@@ -119,7 +203,7 @@ class Hierarchy {
                 }
             }
         }]);
-        
+
         supThis.canRemove = supThis.ctxMenu.getMenuItemById('remove');
         supThis.canRename = supThis.ctxMenu.getMenuItemById('rename');
     }

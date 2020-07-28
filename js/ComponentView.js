@@ -11,7 +11,7 @@ class ComponentView {
     addScript(script, newScript = true, opened = true, enabled = true) {
         var supThis = this;
 
-        if (newScript && script in supThis.selectedNode.data) return;
+        if (newScript && script in supThis.selectedNode.data.scripts) return;
 
         var checked = (enabled ? 'checked' : '');
         var shown = (opened ? 'show' : '');
@@ -26,12 +26,12 @@ class ComponentView {
 
             for (const i of scriptData.config) {
                 var value = "";
-                if(!newScript && supThis.selectedNode.data[script].config != null){
-                    value = supThis.selectedNode.data[script].config[i.name];
+                if (!newScript && supThis.selectedNode.data.scripts[script].config != null) {
+                    value = supThis.selectedNode.data.scripts[script].config[i.name];
                 }
                 inputs += '<tr>\
                                 <td>' + i.name + '</td>\
-                                <td><input type="text" class="configInput" id="'+i.name+'" value="'+value+'"></td>\
+                                <td><input type="text" class="configInput" id="' + i.name + '" value="' + value + '"></td>\
                             </tr>';
             }
 
@@ -51,7 +51,7 @@ class ComponentView {
                                 </div>\
                             </div>')
                 .on('change', '#enabling' + id, function () {
-                    supThis.selectedNode.data[script].enabled = $('#enabling' + id).is(":checked");
+                    supThis.selectedNode.data.scripts[script].enabled = $('#enabling' + id).is(":checked");
                 }).on('input', '.configInput', function () {
                     var config = {};
 
@@ -59,15 +59,15 @@ class ComponentView {
                         config[$(this).attr('id')] = $(this).val();
                     });
 
-                    supThis.selectedNode.data[script].config = config;
+                    supThis.selectedNode.data.scripts[script].config = config;
                 }).on('hide.bs.collapse', function () {
-                    supThis.selectedNode.data[script].opened = false;
+                    supThis.selectedNode.data.scripts[script].opened = false;
                 }).on('show.bs.collapse', function () {
-                    supThis.selectedNode.data[script].opened = true;
+                    supThis.selectedNode.data.scripts[script].opened = true;
                 });
             $('#scriptAccordion').append(scriptLayout).find('.icons').colorSVG(colors.textColor.normal);
             if (newScript) {
-                supThis.selectedNode.data[script] = {
+                supThis.selectedNode.data.scripts[script] = {
                     'opened': true,
                     'enabled': true,
                     'config': null
@@ -150,11 +150,14 @@ class ComponentView {
                     $('#componentName').val(node.text);
 
                     if (node.data == null) {
-                        node.data = {};
+                        node.data = {
+                            scripts: {},
+                            graph: null
+                        };
                     } else {
                         //console.log("Node data ", node);
-                        for (var element in node.data) {
-                            supThis.addScript(element, false, node.data[element].opened, node.data[element].enabled);
+                        for (var element in node.data.scripts) {
+                            supThis.addScript(element, false, node.data.scripts[element].opened, node.data.scripts[element].enabled);
                         }
                     }
                 }
@@ -163,7 +166,7 @@ class ComponentView {
                 $('#chooseScript').toggle();
             })
             .on('click', '.chooseScript', function () {
-                if (!($(this).data('script') in supThis.selectedNode.data)) {
+                if (!($(this).data('script') in supThis.selectedNode.data.scripts)) {
                     supThis.addScript($(this).data('script'));
                 }
             })
